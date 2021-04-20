@@ -1,4 +1,8 @@
 version: '3.2'
+
+volumes:
+    grafana_data: {}
+
 services:
   prometheus:
     image: prom/prometheus:latest
@@ -28,3 +32,15 @@ services:
     container_name: redis
     ports:
     - 6379:6379
+  grafana:
+    image: grafana/grafana
+    user: "472"
+    depends_on:
+      - prometheus
+    ports:
+      - 3000:3000
+    volumes:
+      - grafana_data:/var/lib/grafana
+    env_file:
+      - ./config.monitoring
+    restart: always
